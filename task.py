@@ -19,7 +19,6 @@ from csv import DictReader, DictWriter
 from os.path import exists
 
 file_name = "phones.csv"
-file_str_copy = "phones_copy.csv"
 
 
 class LenNumberError(Exception):
@@ -28,18 +27,16 @@ class LenNumberError(Exception):
 
 
 def get_info():
-    # first_name = "Иван"
-    # last_name = "Иванов"
-    first_name = input("Введите имя: ")
-    last_name = input("Введите фамилию: ")
+    first_name = "Иван"
+    last_name = "Иванов"
     phone_number = None
 
     is_valid = False
 
     while not is_valid:
         try:
-            phone_number = int(input("Введите номер: "))
-            # phone_number = 99999999999
+            # phone_number = int(input('Введите номер: '))
+            phone_number = 99999999999
             if len(str(phone_number)) != 11:
                 raise LenNumberError("Не верная длина номера")
             else:
@@ -59,7 +56,7 @@ def create_file(file_name):
         f_writer.writeheader()
 
 
-def write_file(file_name, lst):
+def write_file(lst):
     with open(file_name, "r", encoding="utf-8") as data:
         f_reader = DictReader(data)
         res = list(f_reader)
@@ -84,15 +81,6 @@ def read_file(file_name):
         return list(f_reader)
 
 
-def copy_str(file_source, file_reciver, str_num):
-    file_content = read_file(file_source)
-    if str_num > len(file_content):
-        return print("Строка с таким номером отсутствует в исходном файле")
-    file_content = list(file_content[str_num - 1].values())
-    write_file(file_reciver, file_content)
-    return
-
-
 def main():
     while True:
         command = input("Введите команду: ")
@@ -102,20 +90,12 @@ def main():
         elif command == "w":
             if not exists(file_name):
                 create_file(file_name)
-            write_file(file_name, get_info())
+            write_file(get_info())
         elif command == "r":
             if not exists(file_name):
                 print("Файл отсутствует")
                 continue
             print(*read_file(file_name))
-        elif command == "c":
-            if not exists(file_name):
-                print("Файл источник отсутствует")
-                continue
-            if not exists(file_str_copy):
-                create_file(file_str_copy)
-            str_copy_num = int(input("Введите номер копируемой строки: "))
-            copy_str(file_name, file_str_copy, str_copy_num)
 
 
 main()
